@@ -12,7 +12,6 @@ import (
 	"github.com/biswaone/mongo-oplog-to-sql/database"
 	"github.com/biswaone/mongo-oplog-to-sql/internal/app/oplog"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 func init() {
@@ -35,13 +34,12 @@ var rootCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal("Error getting oplog:", err)
 		}
+
 		for entry := range oplogCh {
-			extendedJSON, err := bson.MarshalExtJSON(entry.Doc, false, true)
-			if err != nil {
-				log.Println("Error converting to extended JSON:", err)
-				continue
+			if entry.Namespace == "employee.employees" && entry.Operation == "i" {
+				queries := oplog.ParseDocument("employees", entry.Doc)
+				fmt.Println(queries)
 			}
-			fmt.Printf("Operation: %s, Namespace: %s, Document: %s\n", entry.Operation, entry.Namespace, extendedJSON)
 		}
 	},
 }
