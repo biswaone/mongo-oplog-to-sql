@@ -3,16 +3,17 @@ package oplog
 import (
 	"context"
 	"log"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type OplogEntry struct {
-	Timestamp bson.Raw `bson:"ts"`
-	Operation string   `bson:"op"`
-	Namespace string   `bson:"ns"`
-	Doc       bson.Raw `bson:"o"`
+	Timestamp time.Time              `json:"ts" bson:"ts"`
+	Operation string                 `json:"op" bson:"op"`
+	Namespace string                 `json:"ns" bson:"ns"`
+	Doc       map[string]interface{} `json:"o" bson:"o"`
 }
 
 // go routine to fetch the oplogs
