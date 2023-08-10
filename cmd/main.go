@@ -37,10 +37,11 @@ var rootCmd = &cobra.Command{
 
 		for entry := range oplogCh {
 			if entry.Namespace == "employee.employees" && entry.Operation == "i" {
-				queries := oplog.ParseDocument("employees", entry.Doc)
+				queries := oplog.GenerateSqlDocument("employees", entry.Doc, "INSERT")
 				fmt.Println(queries)
 			}
 		}
+
 	},
 }
 
